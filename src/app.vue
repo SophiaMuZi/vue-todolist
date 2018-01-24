@@ -1,19 +1,34 @@
 <template>
-  <div class="test">{{test}}</div>
+    <div id="app">
+        <div class="cover"></div>
+        <Header></Header>        
+        <Footer></Footer>        
+    </div>
 </template>
 
 <script>
-    export default {
-        data(){
-            return {
-                test: 'hahahah'
-            }
-        }
-    }
+import Header from "./todo/header.vue";
+import Footer from "./todo/footer.jsx";
+export default {
+  components: {
+    Header,
+    Footer,
+  }
+};
 </script>
 
-<style>
-    .test{
-        color:red
-    }
+<style lang="less" scoped>
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+}
 </style>
