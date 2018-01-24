@@ -5,7 +5,7 @@ export default {
         return {
             author:'Mu'
         }
-    }
+    },
     render(){
         return (
             <div id="footer">
