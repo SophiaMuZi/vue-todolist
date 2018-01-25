@@ -23,7 +23,9 @@ export default {
     }
   },
   methods: {
-    deleteTodo: function() {}
+    deleteTodo: function() {
+      this.$emit('del',this.todo.id);
+    }
   }
 };
 </script>
@@ -53,6 +55,17 @@ export default {
       color: #d9d9d9;
       text-decoration: line-through;
     }
+    .toggle:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      width: 90%;
+      height: 90%;
+      transform: translate(-50%, -50%);
+      background: url(../assets/image/check.png) no-repeat;
+      background-size: 100%;
+    }
   }
   .toggle {
     text-align: center;
@@ -66,17 +79,7 @@ export default {
     outline: none;
     border-radius: 50%;
     border: 1px solid #d9d9d9;
-    &[checked]:after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top:55%;
-      width: 90%;
-      height: 90%;
-      transform: translate(-50%,-50%);
-      background: url(../assets/image/check.png) no-repeat;
-      background-size: 100%;
-    }
+    cursor: pointer;
   }
   .destory {
     position: absolute;

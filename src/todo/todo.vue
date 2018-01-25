@@ -6,8 +6,16 @@
       autofocus="autofocus"
       placeholder="接下去要做什么？"
       @keyup.enter="addTodo">
-      <item :todo="todo"></item>
-  <tabs :filter="filter"></tabs>
+      <item 
+      v-for="todo in filterTodos"
+      :key="todo.id"
+      :todo="todo"
+      @del="deleteTodo"/>
+  <tabs 
+  :filter="filter" 
+  :todos="todos" 
+  @toggle="toggleFilter" 
+  @deleteAll="deleteAllItem"/>
       
   </section>
 </template>
@@ -17,19 +25,45 @@
 import Item from "./item.vue";
 import Tabs from "./tabs.vue";
 
+let id = 0;
+
 export default {
   data() {
     return {
-      todo: {
-        id: 0,
-        content: "this is todo",
-        completed: false
-      },
+      todos: [],
       filter: "All"
     };
   },
+  computed: {
+    filterTodos: function() {
+      if (this.filter === "All") {
+        return this.todos;
+      }
+      const completed = this.filter === "Completed";
+      return this.todos.filter(todo => completed === todo.completed);
+    }
+  },
   methods: {
-    addTodo: function() {}
+    addTodo: function(e) {
+      if (!e.target.value.trim()) {
+        return;
+      }
+      this.todos.unshift({
+        id: id++,
+        content: e.target.value.trim(),
+        completed: false
+      });
+      e.target.value = "";
+    },
+    deleteTodo: function(id) {
+      this.todos.splice(this.todos.findIndex(todo => todo.id === id), 1);
+    },
+    toggleFilter: function(state) {
+      this.filter = state;
+    },
+    deleteAllItem: function() {
+      this.todos = [];
+    }
   },
   components: {
     Item,
