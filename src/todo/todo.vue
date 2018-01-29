@@ -62,7 +62,7 @@ export default {
       this.filter = state;
     },
     deleteAllItem: function() {
-      this.todos = [];
+      this.todos = this.todos.filter(todo => todo.completed === false);
     }
   },
   components: {
