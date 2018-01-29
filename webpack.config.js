@@ -9,7 +9,7 @@ const config = {
     target: 'web',
     entry: path.join(__dirname, 'src/index.js'),
     output: {
-        filename:'bundle.[chunkhash:8].js',
+        filename: 'bundle.[hash:8].js',
         path: path.join(__dirname, 'dist')
     },
     module: {
@@ -31,20 +31,20 @@ const config = {
                     }
                 }]
             },
-            {
-                test: /\.less$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true,
-                        }
-                    },
-                    'less-loader'
-                ]
-            }
+            // {
+            //     test: /\.less$/,
+            //     use: [
+            //         'style-loader',
+            //         'css-loader',
+            //         {
+            //             loader: 'postcss-loader',
+            //             options: {
+            //                 sourceMap: true,
+            //             }
+            //         },
+            //         'less-loader'
+            //     ]
+            // }
         ]
     },
     plugins: [
@@ -58,22 +58,20 @@ const config = {
 }
 
 if (isDev) {
-    config.module.rules.push(
-        {
-            test: /\.less$/,
-            use: [
-                'style-loader',
-                'css-loader',
-                {
-                    loader: 'postcss-loader',
-                    options: {
-                        sourceMap: true,
-                    }
-                },
-                'less-loader'
-            ]
-        }
-    );
+    config.module.rules.push({
+        test: /\.less$/,
+        use: [
+            'style-loader',
+            'css-loader',
+            {
+                loader: 'postcss-loader',
+                options: {
+                    sourceMap: true,
+                }
+            },
+            'less-loader'
+        ]
+    });
     config.devtool = '#cheap-module-eval-source-map';
     config.devServer = {
         port: 8000,
@@ -87,30 +85,41 @@ if (isDev) {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
     );
-}else{
+} else {
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        vendor: ['vue']
+    }
     config.output.filename = '[name].[chunkHash:8].js';
-    config.module.rules.push(
-        {
-            test: /\.less$/,
-            use: ExtractPlugin.extract({
-                fallback: 'style-loader',
-                use: [
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            sourceMap: true,
-                        }
-                    },
-                    'less-loader'
-                ]
-            })
-        }
-    );
+    config.module.rules.push({
+        test: /\.less$/,
+        use: ExtractPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+                'css-loader',
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        sourceMap: true,
+                    }
+                },
+                'less-loader'
+            ]
+        })
+    });
     config.plugins.push(
-        new ExtractPlugin('styles.[contentHash:8].css')
+        new ExtractPlugin('styles.[contentHash:8].css'),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor'
+        }), //单独打包公共库
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'runtime'
+        }) //单独打包webpack相关代码
     )
 
 }
 
 module.exports = config;
+
+// hash--打包的hash
+// chunckhash--chunk的hash,文件单独output

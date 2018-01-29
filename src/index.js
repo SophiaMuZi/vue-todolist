@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './app.vue'
 
+import './assets/style/global.less'
 
 const root = document.createElement('div');
 document.body.appendChild(root)
